@@ -533,23 +533,35 @@
             "name": "Queries by Query Type"
           },
           {
-            "type": 3,
-            "content": {
-              "version": "KqlItem/1.0",
-              "query": "//Queries by completion type\r\nSynapseBuiltinSqlPoolRequestsEnded\r\n| where _ResourceId in~ ({Synapse})\r\n| project BytesProcessed=Properties.dataProcessedBytes,tostring(Identity)\r\n| summarize sum(toint(BytesProcessed)) by Identity\r\n| render piechart \r\n\r\n",
-              "size": 3,
-              "showAnalytics": true,
-              "title": "Data Processed By User",
-              "timeContextFromParameter": "TimeRange",
-              "queryType": 0,
-              "resourceType": "microsoft.operationalinsights/workspaces",
-              "crossComponentResources": [
-                "{LogAnalyticsWorkspace}"
-              ]
-            },
-            "customWidth": "33",
-            "showPin": true,
-            "name": "Data Processed By User"
+             "type":3,
+             "content":{
+                "version":"KqlItem/1.0",
+                "query":"//Queries by completion type\r\nSynapseBuiltinSqlPoolRequestsEnded\r\n| where _ResourceId in~ ({Synapse})\r\n| project Gb = todouble(Properties.dataProcessedBytes) / 1000000000, Identity\r\n| summarize round(sum(Gb), 1) by IdentityString = tostring(Identity)\r\n| render piechart\r\n\r\n",
+                "size":3,
+                "showAnalytics":true,
+                "title":"Data Processed By User",
+                "timeContextFromParameter":"TimeRange",
+                "queryType":0,
+                "resourceType":"microsoft.operationalinsights/workspaces",
+                "chartSettings":{
+                   "yAxis":[
+                      "sum_Gb"
+                   ],
+                   "ySettings":{
+                      "numberFormatSettings":{
+                         "unit":5,
+                         "options":{
+                            "style":"decimal",
+                            "useGrouping":true,
+                            "minimumFractionDigits":1
+                         }
+                      }
+                   }
+                }
+             },
+             "customWidth":"33",
+             "showPin":true,
+             "name":"Data Processed By User"
           },
           {
             "type": 3,
